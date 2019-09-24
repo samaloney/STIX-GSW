@@ -38,7 +38,7 @@ pro process_telemetry, request_dir, output_dir, keep_going=keep_going, stream=st
   bitreader->set_data, start_of_nominal_day_as_bin
   obt_start = bitreader->bits(32)
 
-  print, "Starting packet processing"
+  stx_lldp_logger, "Starting packet processing"
 
   start_time = systime(1)
   num_packets = 0L
@@ -71,7 +71,7 @@ pro process_telemetry, request_dir, output_dir, keep_going=keep_going, stream=st
 
   time_used = systime(1) - start_time
   average_time = time_used / num_packets
-  print,"DONE, num_packets: ",num_packets
-  print,"Average time", average_time
+  stx_lldp_logger,"DONE, num_packets: "+num_packets
+  stx_lldp_logger,"Average time: "+average_time
 
 end

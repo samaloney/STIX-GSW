@@ -78,7 +78,7 @@ function stx_update_primary_header_l1, header=header, filename=filename, create_
     file_origin = 'STIX Team, FHNW'
     vers_sw = '1' ;git taged realease maybe
 
-    header = stx_update_primary_fits_header_common(header=header, filename=filename, $
+    header = stx_update_primary_header_common(header=header, filename=filename, $
         create_date=create_date, obt_beg=obt_beg, obt_end=obt_end, timesys=timesys, level=level, $
         file_origin=file_origin, creator=creator, version=version, obs_mode=obs_mode, $
         vers_sw=vers_sw)

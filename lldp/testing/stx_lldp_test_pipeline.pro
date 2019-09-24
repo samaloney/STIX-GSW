@@ -1,5 +1,5 @@
 pro stx_lldp_test_pipeline
-
+  on_error, 0
   ; Linux Paths
   env_in = 'instr_input_requests='
   env_out= 'instr_output='

@@ -1,6 +1,6 @@
 pro stx_lldp_init_environment
   ; ensure it's linux ($ENV vs. %env%)
-  if(strlowcase(!VERSION.os_family) ne 'unix') then print, '[ERR] - This initialization script does only support Unix/Linux systems'
+  if(strlowcase(!VERSION.os_family) ne 'unix') then stx_lldp_logger, 'This initialization script does only support Unix/Linux systems', 'ERROR'
   
   ; define root
   ssw_stix = '/home/user/svn/idl/stix/STIX-ASW/stix'
@@ -35,20 +35,20 @@ pro stx_lldp_init_environment
         env_var = env_var[1]
         resolved_env_var = getenv(env_var)
         
-        print, "[INFO] - Input line '" + line + "' will be updated with environment variable '$" + env_var + "'."
-        if(trim(resolved_env_var) eq '') then print, "[WARN] - Environment variable '$" + env_var + "' could not be resolved!" 
+        stx_lldp_logger, "Input line '" + line + "' will be updated with environment variable '$" + env_var + "'."
+        if(trim(resolved_env_var) eq '') then print, "Environment variable '$" + env_var + "' could not be resolved!", 'WARNING'
         
         line = str_replace(line, '$' + env_var, getenv(env_var))
-        print, "[INFO] - Input line is now '" + line + "'."
+        stx_lldp_logger, "Input line is now '" + line + "'."
       endif
       
       instruction = str_replace(line, string(9b), string(32b))
       instruction = strsplit(instruction, ' ', /extract)
       ;instruction = strsplit(instruction[1], string(9b), /extract)
-      print, "[INFO] - Updating environment with 'setenv, " + instruction[1] + "=" + instruction[2] + "'."
+      stx_lldp_logger, "Updating environment with 'setenv, " + instruction[1] + "=" + instruction[2] + "'."
       setenv, instruction[1] + '=' + instruction[2]
     endif else begin
-      print, 'Unknown line or command: ' + line
+      stx_lldp_logger, 'Unknown line or command: ' + line, 'ERROR'
     endelse
   endwhile
   free_lun, lun

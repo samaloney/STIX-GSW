@@ -40,25 +40,28 @@
 ;
 ;-
 function stx_update_primary_header_ll01, header=header, filename=filename, create_date=create_date, $
-    obt_beg=obt_beg, obt_end=obt_end, complete=complete
+    obt_beg=obt_beg, obt_end=obt_end, xposure=xposure, complete=complete
+
+    default, complete, 'C'
+    default, obs_mode, 'NOMINAL'
 
     ; Fixed for LL02
     timesys = 'OBT'
     level = 'LLO1'
     creator = 'LLDP-STIX'
     file_origin = 'Solar Orbiter SOC, ESAC'
-    vers_sw = '00.06.00'
+    vers_sw = '00.06.01'
 
     ; Create time YYYYMMDDTHHMM
-    version = create_date
+    version = strmid(create_date, 0, 4)+strmid(create_date, 5, 2)+strmid(create_date, 8, 2)+strmid(create_date, 11, 2)+strmid(create_date, 14, 2)
 
     header = stx_update_primary_header_common(header=header, filename=filename, $
-        create_data=create_data, obt_beg=obt_beg, obt_end=obt_end, timesys=timesys, level=level, $
+        create_date=create_date, obt_beg=obt_beg, obt_end=obt_end, timesys=timesys, level=level, $
         file_origin=file_origin, creator=creator, version=version, obs_mode=obs_mode, $
-        vers_sw=vers_sw)
+        xposure=xposure, vers_sw=vers_sw)
 
     ; Addd complete tag
     sxaddpar, header, 'COMPLETE', complete, 'C,I,U'
 
-    reutrn header
+    return, header
 end

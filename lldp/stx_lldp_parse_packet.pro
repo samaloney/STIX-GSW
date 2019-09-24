@@ -51,10 +51,10 @@ PRO stx_lldp_parse_packet, bitreader, tmtc_writer, monotony_reset=monotony_reset
   ; Pring meaning of segflag, and sequence count
   ;
   CASE segflag OF
-    '01'b: print, string(ssid) + " [" + string(seqcount)+"]", format='(A,$)'
-    '00'b: print, '.', format='(A,$)'
-    '10'b: print, " - done"
-    '11'b: print, string(ssid) + " Only one packet - done"
+    '01'b: stx_lldp_logger, string(ssid) + string(" [" + string(seqcount)+"]", format='(A,$)')
+    '00'b: stx_lldp_logger, string('.', format='(A,$)')
+    '10'b: stx_lldp_logger, " - done"
+    '11'b: stx_lldp_logger, string(ssid) + " Only one packet - done"
     ELSE:  stop,"What?"
   END
 

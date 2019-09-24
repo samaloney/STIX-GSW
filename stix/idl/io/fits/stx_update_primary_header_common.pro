@@ -3,7 +3,7 @@
 ;       STIX
 ;
 ; :name:
-;       stx_update_primary_fits_header_common
+;       stx_update_primary_header_common
 ;
 ; :purpose:
 ;       Update a fits head to contain common tags
@@ -54,10 +54,10 @@
 ;       09-April-2019 – SAM (TCD) init
 ;
 ;-
-function stx_update_primary_fits_header_common, header=header, filename=filename, $
+function stx_update_primary_header_common, header=header, filename=filename, $
     create_date=create_date, obt_beg=obt_beg, obt_end=obt_end, timesys=timesys, $
     level=level, file_origin=file_origin, creator=creator, version=version, obs_mode=obs_mode, $
-    vers_sw=vers_sw
+    xposure=xposure, vers_sw=vers_sw
     
     ; Fixed for STIX    
     sxaddpar, header, 'TELESCOP', 'SOLO/STIX'
@@ -75,6 +75,7 @@ function stx_update_primary_fits_header_common, header=header, filename=filename
     sxaddpar, header, 'CREATOR', creator
     sxaddpar, header, 'VERSION', version 
     sxaddpar, header, 'OBS_MODE', obs_mode
+    sxaddpar, header, 'XPOSURE', xposure, '[s] Integration Time'
     sxaddpar, header, 'VERS_SW', vers_sw
  
     return, header

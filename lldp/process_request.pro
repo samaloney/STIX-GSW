@@ -6,8 +6,8 @@ PRO process_request, input_dir, output_dir
   stx_lldp_init_environment
   
   request = file_basename(input_dir)
-  print
-  print, "PROCESSING: "+request
+  
+  stx_lldp_logger, "PROCESSING: "+request
 
   ; We get back "obt_start" which is the first OBT in the "current day".
   ;
@@ -15,21 +15,21 @@ PRO process_request, input_dir, output_dir
     obt_start=obt_start, obt_end=obt_end
 
 
-  print
-  print, "Pretending to be done"
-  print
-  print, "Coarse OBT start: ", obt_start
-  print, "Coarse OBT end  : ", obt_end
-  print, "Duration (secs) : ", obt_end-obt_start
-  print
-  help, obt_start, obt_end
+  stx_lldp_logger
+  stx_lldp_logger, "Pretending to be done"
+  stx_lldp_logger
+  stx_lldp_logger, "Coarse OBT start: " + obt_start
+  stx_lldp_logger, "Coarse OBT end  : " + obt_end
+  stx_lldp_logger, "Duration (secs) : " + obt_end-obt_start
+  stx_lldp_logger
+;  help, obt_start, obt_end
+  obt_beg = obt_start
 
-  print, 'Making dummy fits file using OBT_BEG = OBT start'
-  obt_beg = trim(obt_start, '(I010)')
+  stx_lldp_logger, 'Making dummy fits file using OBT_BEG = OBT start'
+  ;obt_beg = trim(obt_start, '(I010)')
 
   svn_number = svn_number()
-  print, 'SVN number = '+trim(svn_number)
-  print
+  stx_lldp_logger, 'SVN number = '+trim(svn_number)
   aux_dir = input_dir + "/auxiliary"
   filename = aux_dir + "/filtered_tmtc.bin"
   tmtc_reader = stx_telemetry_reader(stream=stream)
@@ -47,9 +47,14 @@ PRO process_request, input_dir, output_dir
   file_nr=0
   first_run=1
   foreach lightcurve, asw_ql_lightcurve do begin
+    
+    cur_time = anytim(!stime, /ccsds)
+    tstamp = strmid(cur_time, 0, 4)+strmid(cur_time, 5, 2)+strmid(cur_time, 8, 2)+strmid(cur_time, 11, 2)+strmid(cur_time, 14, 2)
+
+    
     file_lighcurve = output_dir+'/solo_LL01_stix-lightcurve_'+trim(string(obt_beg))+'_'+trim(string(file_nr))+'.fits'
     if first_run then begin
-      file_lighcurve = output_dir+'/solo_LL01_stix-lightcurve_'+trim(string(obt_beg))+'.fits'
+      file_lighcurve = output_dir+'/solo_LL01_stix-lightcurve_'+trim(string(obt_beg, format='(I010)'))+'-'+trim(string(obt_end, format='(I010)'))+'V'+tstamp+'C.fits'
       first_run=0
     endif
     err=stx_asw2fits(lightcurve,file_lighcurve,obt_beg=obt_beg,obt_end=obt_end, history=trim(svn_number))
@@ -60,9 +65,13 @@ PRO process_request, input_dir, output_dir
   file_nr=0
   first_run=1
   foreach flare, asw_ql_flare_flag_location do begin
+    
+    cur_time = anytim(!stime, /ccsds)
+    tstamp = strmid(cur_time, 0, 4)+strmid(cur_time, 5, 2)+strmid(cur_time, 8, 2)+strmid(cur_time, 11, 2)+strmid(cur_time, 14, 2)
+    
     file_flare_flag = output_dir+'/solo_LL01_stix-flareinfo_'+trim(obt_beg)+'_'+trim(file_nr)+'.fits'
     if first_run then begin
-      file_flare_flag = output_dir+'/solo_LL01_stix-flareinfo_'+trim(obt_beg)+'.fits'
+      file_flare_flag = output_dir+'/solo_LL01_stix-flareinfo_'+trim(string(obt_beg, format='(I010)'))+'-'+trim(string(obt_end, format='(I010)'))+'V'+tstamp+'C.fits'
       first_run=0
     endif
     err=stx_asw2fits(flare,file_flare_flag,obt_beg=obt_beg,obt_end=obt_end,history=trim(svn_number))

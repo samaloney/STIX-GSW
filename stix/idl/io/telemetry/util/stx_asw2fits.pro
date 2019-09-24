@@ -57,21 +57,29 @@ function lightcurve2fits, input, filename, obs_mode=obs_mode, $
   header = headfits(filename)
   ex1_header = headfits(filename, EXTEN=1)
   ex2_header = headfits(filename, EXTEN=2)
+
+  path_parts = strsplit(filename, '/', /ext)
+  fn = path_parts[-1]
+
+  create_date=anytim(!stime, /ccsds)
+  header =  stx_update_primary_header_ll01(header=header, filename=fn, create_date=create_date, $
+    obt_beg=_extra.obt_beg, obt_end=_extra.obt_end, xposure=integration_time, complete=complete_flag)
   
   ; complete header ex1 & ex2
+  sxaddpar, ex1_header, 'EXTNAME', 'COUNTS'
   sxaddpar, ex1_header, 'TUNIT1', 'counts/s/cm2', 'Unit for COUNTS'
   sxaddpar, ex1_header, 'TUNIT2', '', 'Unit for CHANNEL'
   sxaddpar, ex1_header, 'TUNIT3', 's', 'Unit for RELATIVE_TIME'
-  sxaddpar, ex2_header, 'ENEBAND', 'Extension name'
+  sxaddpar, ex2_header, 'EXTNAME', 'ENEBAND', 'Extension name'
   sxaddpar, ex2_header, 'TUNIT1', ''
   sxaddpar, ex2_header, 'TUNIT2', 'keV'
-  sxaddpar, ex2_header, 'TUNIT3', ' keV'
-  create_header, header=header, filename=filename, integration_time=integration_time,$
-    obt_start=obt_start, obt_end=obt_end
+  sxaddpar, ex2_header, 'TUNIT3', 'keV'
+  ;create_header, header=header, filename=filename, integration_time=integration_time,$
+  ;  obt_start=obt_start, obt_end=obt_end
   
   mwrfits,!NULL,filename,header,/create, status=stat0
-  mwrfits,ex1_data,filename,ex1_header, status=stat1
-  mwrfits,ex2_data,filename,ex2_header, status=stat2
+  mwrfits,ex1_data,filename,ex1_header, status=stat1, /no_comment
+  mwrfits,ex2_data,filename,ex2_header, status=stat2, /no_comment
   
   if stat0+stat1+stat2 ne 0 then return, 0
   return, 1
@@ -116,21 +124,28 @@ function flareflag2fits, input, filename, obs_mode=obs_mode, $
   header = headfits(filename)
   ex1_header = headfits(filename, EXTEN=1)
 
+  path_parts = strsplit(filename, '/', /ext)
+  fn = path_parts[-1]
+
+  create_date=anytim(!stime, /ccsds)
+  header =  stx_update_primary_header_ll01(header=header, filename=fn, create_date=create_date, $
+    obt_beg=_extra.obt_beg, obt_end=_extra.obt_end, xposure=integration_time, complete=complete_flag)
+
   ; complete header ex1 & ex2
   sxaddpar, ex1_header, 'TUNIT1', 'arcmin', 'Unit for Y_POS'
   sxaddpar, ex1_header, 'TUNIT2', 'arcmin', 'Unit for Z_POS'
   sxaddpar, ex1_header, 'TUNIT3', '', 'Unit for POS_VALID'
   sxaddpar, ex1_header, 'TUNIT4', '', 'Unit for FLARE_FLAG'
   sxaddpar, ex1_header, 'TUNIT5', 's', 'Unit for RELATIVE_TIME'
-  create_header, header=header, filename=filename, integration_time=integration_time, $
-    obt_start=obt_start, obt_end=obt_end
+;  create_header, header=header, filename=filename, integration_time=integration_time, $
+;    obt_start=obt_start, obt_end=obt_end
   
 
   mwrfits,!NULL,filename,header,/create, status=stat0
   mwrfits,ex1_data,filename,ex1_header, status=stat1
-  mwrfits,ex2_data,filename,ex2_header, status=stat2
+;  mwrfits,ex2_data,filename,ex2_header, status=stat2
 
-  if stat0+stat1+stat2 ne 0 then return, 0
+  if stat0+stat1 ne 0 then return, 0
   return, 1
 end
 
