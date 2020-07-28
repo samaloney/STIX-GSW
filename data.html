@@ -1,0 +1,1170 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creation and Format of Level 0-1-2 Database &#8212; STIX-ASW  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Glossary" href="glossary.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="creation-and-format-of-level-0-1-2-database">
+<h1>Creation and Format of Level 0-1-2 Database<a class="headerlink" href="#creation-and-format-of-level-0-1-2-database" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="levels-levels-levels">
+<h2>Levels, Levels, Levels<a class="headerlink" href="#levels-levels-levels" title="Permalink to this headline">¶</a></h2>
+<p>The term level is used in a number of different and unfortunately often
+confusing contexts when discussing STIX data, describing data levels
+stored in on-ground archives [RD01], data levels and structures
+transmitted from the spacecraft in TM [RD02] and finally integer
+compression levels [RD03]. At a mission level the Solar Orbiter team has
+defined a number of levels which specify the type of content and file
+types as they will be stored in on-ground archives outlined in Section
+4.1, L0 raw telemetry, L1 uncalibrated data, L2 calibrated data and L3
+derived products. Further the type of data and structures sent from STIX
+to the ground in TM for bulk science data (BSD) also have a number of
+levels which correspond to how much onboard processing is done, L0 raw
+pixel counts and triggers from the archive buffer for given time and
+energy range (no compression), L1 pixel and trigger counts compressed,
+L2 data additionally summed over pixel elements, L3 visibilities derived
+from the summed pixel counts and finally L4 spectrograms see Section
+4.2. STIX data in TM may also be compressed and this integer compression
+has different compression ratios or as levels described in Section 4.3.</p>
+<p>Within this document on-ground data levels will be referred to as L0,
+L1, L2, STIX on-board bulk science data (BSD) levels as BSD-L0, BSD-L1,
+BSD-L2, BSD-L3, BSD-L4, and where necessary compression levels as
+integer compression levels.</p>
+<div class="section" id="solar-orbiter-data-levels">
+<h3>Solar Orbiter Data Levels<a class="headerlink" href="#solar-orbiter-data-levels" title="Permalink to this headline">¶</a></h3>
+<p>The key idea behind the L0 data is it should only contain information
+which is contained in the raw TM packet itself and is thus a standalone
+archive of TM. L1 data are processed incorporating external data, for
+example conversion of on-board SCET to UT times, to a level which is
+usable for engineering, monitoring and planning purposes. L2 data is
+science grade with all necessary calibration and conversion steps
+performed, it should be noted they can be different version of L2 data
+as better calibrations may become available. Finally L3 data is derived
+data products for STIX this could consist of flare images and movies
+derived from the L2 data.</p>
+<p>L0        IT                                Raw TM                           FITS metadata reflect the information that was available in the TM packets only.
+L1        IT                                Engineering data, uncalibrated   FITS metadata follows Solar Orbiter standard for L1 (see section 3.
+L2        IT                                Calibrated data, science quality FITS, metadata follows Solar Orbiter standard for L2 (see section 3. [RD.09]): full attitude information in WCS coordinate frame and time in UTC.
+L3        IT                                Higher-level data                Data format as appropriate (The format of both Level-3 data and Calibration data can be chosen depending on the type of data product and the objectives. However, as much as possible standard formats should be used (MPEG, FITS, JPEG2000, CDF, PNG, …).
+========= =================================
+================================
+============================================================================================================================================================================================================================================================</p>
+<p>Table 4‑1 Ground Archive Levels</p>
+</div>
+<div class="section" id="stix-bulk-science-types-or-levels">
+<h3>STIX Bulk Science Types or Levels<a class="headerlink" href="#stix-bulk-science-types-or-levels" title="Permalink to this headline">¶</a></h3>
+<p>BSD levels define to the on-board processing and data structures which
+are sent to the ground via TM. BSD-L0 is the most raw form of STIX data
+it is essentially a dump of the archive buffer between the given times
+and energy channels. L1 data is processed on-board applying integer
+compression to the pixel counts and triggers as well as removal of empty
+time energy bins. L2 data is further summed on-board, summing 12 pixels
+to 4 summed pixels per detector, these summed counts and triggers are
+also integer compressed. L3 data convert the summed pixel counts into
+complex visibilities. Finally L4 data, or spectrograms, are summed over
+all pixels and detectors ….</p>
+<p><strong>Level</strong> <strong>Data Type</strong>                 <strong>Format and Metadata content</strong>
+========= =============================
+==========================================================
+L0        Pixel Counts, Triggers        Raw archive buffer data, no compression of photonic counts
+L1        Pixel Counts, Triggers        Trigger and pixel counts compressed
+L2        Summed Pixel Counts, Triggers Summed pixel and triggers counts compressed
+L3        Visibilities                  Visibilities derived from the summed pixel counts
+L4        Spectrogram                   Descrition
+========= =============================
+==========================================================</p>
+<p>Table 4‑2 Bulk Science Data Levels</p>
+</div>
+<div class="section" id="stix-integer-compression">
+<h3>STIX Integer Compression<a class="headerlink" href="#stix-integer-compression" title="Permalink to this headline">¶</a></h3>
+<p><strong>Parameter</strong> <strong>Meaning</strong>             <strong>Description</strong>
+============= =======================
+================================================
+S             Sign                    1 if datum may be signed, 0 if strictly positive
+K             Number of exponent bits
+M             Number of mantissa bits
+============= =======================
+================================================</p>
+<p>Table 4‑3 Integer compression Parameters</p>
+</div>
+</div>
+<div class="section" id="telemetry-acquisition-process">
+<h2>Telemetry Acquisition Process<a class="headerlink" href="#telemetry-acquisition-process" title="Permalink to this headline">¶</a></h2>
+<p>Solar Orbiter telemetry will be retrieved from the EDDS via routine
+queries [RD04]. The timing of SO downlink passes is known and will be
+communicated through the E-FECS files [RD05] distributed via GFTS
+[RD06]. The pass timings will be used to schedule queries against the
+EDDS, this will ensure timely acquisition of either TM data or problem
+detection.</p>
+<p><strong>The EDDS is not a long term data storage system TM will only be
+temporally stored so it is critical that all TM be obtain in a timely
+manner.</strong></p>
+<p>The EDDS stores raw data in a self-descrying and extensible format
+consisting of a raw header describing the header fields followed by N
+tuples of header fields and data elements as shown in Table 5‑1.</p>
+</div>
+</div>
+<div class="section" id="raw-header">
+<h1>Raw Header<a class="headerlink" href="#raw-header" title="Permalink to this headline">¶</a></h1>
+<p>Header Fields (1)
+Data Element (1)
+Header Field (2)
+Data Element (2)
+…
+Header Field (N)
+Data Element (N)
+=================</p>
+<p>Table 5‑1 EDDS Binary Structure</p>
+<p>For TM the fields in Table 5‑2 should be available in the header and in
+this case the data field itself consist of the raw packet as generated
+on the spacecraft preceded by and EDDS sequence number and packet length
+see Table 5‑3.</p>
+<p><strong>Number</strong> <strong>Field</strong>                      <strong>Type</strong>         <strong>Description</strong>
+========== ============================== ================
+============================================================================================================================================
+1          Source Sequence Counter        Unsigned Integer The sequential binary count of each source packet generated by an application process identified by a unique application process identifier.
+2          APID                           Unsigned Integer The PUS Service Application Process Identifier
+3          PID                            Unsigned Integer The Packet ID, calculated from the APID
+4          Category                       Unsigned Integer Packet category, calculated from the APID
+5          P1val                          Unsigned Integer ?? mission specific ??
+6          P2val                          Unsigned Integer ?? mission specific ??
+7          Data Stream                    Unsigned Integer
+8          Generation-Time                CCSDS CUC        On-board generation time
+9          Reception-Time                 CCSDS CUC        Time extracted from frame on-ground
+10         Packet Length                  Unsigned Integer
+11         SPID                           Unsigned Integer Packet ID
+12         Ground Station                 Unsigned Integer ID of ground station that received packet
+13         Virtual Channel                Unsigned Integer virtual channel of on-board source
+14         Data Unit Type                 Unsigned Integer
+15         Type                           Unsigned Integer PUS Service Type
+16         SubType                        Unsigned Integer PIS Service Sub Type
+17         SleServieID                    Unsigned Integer
+18         Time Quality                   Unsigned Integer
+19         Quality Flag / Time Stamp Type Unsigned Integer
+20         Database Version               Unsigned Integer
+21         Domain
+========== ============================== ================
+============================================================================================================================================</p>
+<p>Table 5‑2 EDDS TM Packet Raw Headers</p>
+<p><strong>Field</strong> <strong>Content</strong>         <strong>Size</strong> <strong>Description</strong>
+========= =================== ========
+=========================================================================================================
+Count     EDDS Sequence Count 1 byte   Data element sequence count applied by EDDS. Clients can use this to detect missing data during transfer.
+Length    Date Length         4 bytes  Size of the data field in octets
+Data      TM Packet           Raw      Raw packet
+========= =================== ========
+=========================================================================================================</p>
+<p>Table 5‑3 TM Raw Packet Element</p>
+<p>TM can be retrieved from the EDDS in a number of formats with a number
+of fields or headers and the TM itself. Specific SO headers may be added
+in the future TBD. The EDDS supports XML format for TM delivery in this
+format the header data and binary TM blob are contained within XML tags
+which are both human and machine readable.</p>
+<p>Currently not clear if all headers are available in all format types!</p>
+<div class="section" id="ancillary-data-from-solo">
+<h2>Ancillary Data from SolO<a class="headerlink" href="#ancillary-data-from-solo" title="Permalink to this headline">¶</a></h2>
+<p>Ancillary data products are those products that are not strictly science
+data, but are still helpful in scientific analysis or the preparation of
+higher-level science data products, for example orbit files containing
+the position and velocity of the spacecraft or time conversation data.
+The SOC is responsible for the production and distribution of these
+ancillary data products that are not relevant to only a single
+instruments, and that are not based on instrument telemetry, but rather
+platform telemetry (e.g. AOCS parameters in housekeeping) or other data
+available on ground. This is not only to reduce duplication of effort,
+but also to ensure consistency in the ephemerides etc. that are used in
+producing the higher-level science data products on the ground, and
+therefore make multi-instrument data analysis as simple as possible.
+Ancillary data consists of:</p>
+<ul class="simple">
+<li><p>Time conversion</p></li>
+<li><p>Orbit</p></li>
+<li><p>Attitude</p></li>
+<li><p>Coordinate Systems, Reference Frames, Fields of View</p></li>
+<li><p>Operation misalignments</p></li>
+</ul>
+<p>for more detailed information on this data see [RD07]</p>
+<p>This ancillary data products will be produced in the form of SPICE
+kernels for use with the NAIF SPICE toolkit. A limited subset of
+ancillary data will be provide in the form of CDF file for planning and
+situational awareness around the low latency data.</p>
+<p>The ancillary data (spice kernels) will primary be distributed via the
+<strong>GFTS mechanism and these files will be the most recent and should be
+used for any operational workflow</strong>. The SPICE kernels will also be
+available via the ESA SPICE SFTP server and all ancillary data on the
+SOAR although not necessarily immediately after they are created.</p>
+</div>
+<div class="section" id="telemetry-from-soc-to-stix-level-0-products">
+<h2>Telemetry from SOC to STIX Level 0 Products<a class="headerlink" href="#telemetry-from-soc-to-stix-level-0-products" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="general-purpose-of-level-0-product">
+<h3>General Purpose of Level 0 Product<a class="headerlink" href="#general-purpose-of-level-0-product" title="Permalink to this headline">¶</a></h3>
+<p>Create a database of unaltered timestamped copies of time-ordered TM
+from SOC.</p>
+</div>
+<div class="section" id="telemetry-processing-tools-in-gsw">
+<h3>Telemetry Processing Tools in GSW<a class="headerlink" href="#telemetry-processing-tools-in-gsw" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="level-0-product-structures-and-contents">
+<h3>Level 0 Product Structures and Contents<a class="headerlink" href="#level-0-product-structures-and-contents" title="Permalink to this headline">¶</a></h3>
+<p>Until we gain access to the actual EDDS the exact structure of the L0
+data cannot be completely defined however we can make some assumptions
+about what will be available. Given the EDDS packed structure is
+repeated for each TM packet and plan to filter by APID, PID, Category
+and possibly Type and Subtype by definition we can at least extract
+these into a fixed header and have a single binary table extension where
+each packet is a row in the table. There may be additional fields that
+remain static which can also be moved to static header.</p>
+<p>Header:</p>
+<p>APID</p>
+<p>PID</p>
+<p>Category</p>
+<p>SPID</p>
+<p>Data Unit Type</p>
+<p>Type</p>
+<p>SubType</p>
+<p>SleServieID</p>
+<p>Min-Generation-Time</p>
+<p>Max-Generation-Time</p>
+<p>Extension (bin table) columns:</p>
+<p>Source Sequence Counter</p>
+<p>P1val</p>
+<p>P2val</p>
+<p>Packet Length</p>
+<p>Data Stream</p>
+<blockquote>
+<div><p>Generation-Time</p>
+</div></blockquote>
+<p>Reception-Time</p>
+<p>Ground Station</p>
+<p>Virtual Channel</p>
+<p>Time Quality</p>
+<p>Quality Flag / Time Stamp Type</p>
+<p>Database Version</p>
+<p>Domain</p>
+<div class="section" id="house-keeping">
+<h4>House Keeping<a class="headerlink" href="#house-keeping" title="Permalink to this headline">¶</a></h4>
+<p>Remove?</p>
+</div>
+<div class="section" id="quick-look">
+<h4>Quick Look<a class="headerlink" href="#quick-look" title="Permalink to this headline">¶</a></h4>
+<p>Remove?</p>
+</div>
+<div class="section" id="bulk-science">
+<h4>Bulk Science<a class="headerlink" href="#bulk-science" title="Permalink to this headline">¶</a></h4>
+<p>Remove?</p>
+</div>
+</div>
+<div class="section" id="telemetry-acquisition-from-soc">
+<h3>Telemetry Acquisition from SOC<a class="headerlink" href="#telemetry-acquisition-from-soc" title="Permalink to this headline">¶</a></h3>
+<p>Telemetry will be acquired from the EDDS in XML format the header data
+will then be use to filter data into silos base on APID, packet category
+and SID or SSID. Table 7‑1 list the APIDs and packet categories for STIX
+the three main sources of data will be:</p>
+<ul class="simple">
+<li><p>90-4 housekeeping</p></li>
+<li><p>91-12 BSD and</p></li>
+<li><p>93-12 quick look</p></li>
+</ul>
+<p>however data of other types for example 90-8 diagnostics must also be
+handled.</p>
+<p><strong>Process ID</strong> <strong>Packet Category</strong>
+============== ============================================= ==
+=========================================================
+90             Command &amp; Control Application                 1  Telecommand Acknowledgment
+                                                           3  Table Generation
+                                                           4  HK (routine) – service 3
+                                                           6  Functional non-cyclic
+                                                           7  Event Generation -service 5
+                                                           8  Diagnostics
+                                                           9  Dump TM
+                                                           11 Context – service 22
+91             Onboard data processing application           12 Science data
+92             -                                             -  -
+93             Auxiliary Science data processing application 12 Quick look data
+94             Auxiliary control data                        5  Functional cyclic (high frequency) – Instrument heartbeat
+============== ============================================= ==
+=========================================================</p>
+<p>Table 7‑1 APIDs and Packet Categories</p>
+<p><strong>Process ID</strong> <strong>Packet Category</strong>           <strong>Structure ID (SID)</strong>
+============== ============================= ====================== =
+====================================
+90             Command &amp; Control Application 4                      1 Housekeeping data report mini (SuSW)
+                                                                  2 Housekeeping data report maxi (ASW)
+============== ============================= ====================== =
+====================================</p>
+<p>Table 7‑2 Housekeeping Struture IDs (SIDs)</p>
+<p>                                                                                            11, 21 BSD-L1 (autonomous, user selected)
+                                                                                            12, 22 BSD-L2 (autonomous, user selected)
+                                                                                            13, 23 BSD-L3 (autonomous, user selected)
+                                                                                            14,24  BSD-L4 (autonomous, user selected)
+                                                                                            42     Aspect Data (autonomous, user selected)
+92             -                                                                              -      -
+93             Auxiliary Science data processing application                                  30     QL – light curves
+                                                                                            31     QL – background
+                                                                                            32     QL – Spectra
+                                                                                            33     QL – Variance
+                                                                                            34     QL – Flare flag &amp; location
+                                                                                            40     QL – Flare list
+                                                                                            41     Calibration Spectrum
+                                                                                            43     TM Management status
+==============
+==============================================================================
+====== =======================================</p>
+<p>Table 7‑3 Science Struciure IDs (SSIDs)</p>
+</div>
+<div class="section" id="telemetry-to-level-0-fits">
+<h3>Telemetry to Level 0 FITS<a class="headerlink" href="#telemetry-to-level-0-fits" title="Permalink to this headline">¶</a></h3>
+<p>The telemetry acquired from the EDDS will be process and populated into
+the data structures defined above these data structure will then be
+serialised to FITS files. These fits file will be</p>
+<p>truncated to cover a predefined time period TBD.</p>
+<p>Current suggestion include:</p>
+<ul class="simple">
+<li><p>Instrument safe mode to safe mode (see below)</p>
+<ul>
+<li><p>Not guaranteed to be steady would possible need to keep a record</p></li>
+</ul>
+</li>
+<li><p>Spacecraft day</p>
+<ul>
+<li><p>Simple but a packet could extend over the boundary</p></li>
+</ul>
+</li>
+<li><p>By downlink pass</p>
+<ul>
+<li></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="operational-considerations">
+<h3>Operational Considerations<a class="headerlink" href="#operational-considerations" title="Permalink to this headline">¶</a></h3>
+<p>Block size for observation align with mode (it is foreseen that we will
+not stay in nominal mode 24h at a time and then go back to safe).</p>
+</div>
+<div class="section" id="open-issues">
+<h3>Open Issues<a class="headerlink" href="#open-issues" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>HK and QL very different from bulk science processing don’t
+necessarily fit together</p></li>
+<li><p>How can data be requested from the EDD, by day by hour, service etc?</p>
+<ul>
+<li><p>by pass creation date, request date, should have access to EDDS
+now</p></li>
+</ul>
+</li>
+<li><p>What is the data format, XML with embedded binary?</p>
+<ul>
+<li><p>??</p></li>
+</ul>
+</li>
+<li><p>Do we have example file?</p>
+<ul>
+<li><p>??</p></li>
+</ul>
+</li>
+<li><p>How do we know when to re-request data for incomplete sequences?</p>
+<ul>
+<li><p>Need to derive from generation data and length</p></li>
+</ul>
+</li>
+<li><p>How will this work with current TM reader/writer</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="stix-level-0-to-stix-level-1-products">
+<h2>STIX Level 0 to STIX Level 1 Products<a class="headerlink" href="#stix-level-0-to-stix-level-1-products" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="general-purpose-of-level-1-product">
+<h3>General Purpose of Level 1 Product<a class="headerlink" href="#general-purpose-of-level-1-product" title="Permalink to this headline">¶</a></h3>
+<p>Create database of the TM which is minimally processed</p>
+<ul class="simple">
+<li><p>Decompress</p></li>
+<li><p>Bit masks converted to binary mask arrays</p></li>
+<li><p>Onboard time converted to UTC</p></li>
+<li><p>Physical quantities added (keV, counts/s etc)</p></li>
+</ul>
+</div>
+<div class="section" id="telemetry-processing-tools-in-gsw-1">
+<span id="id1"></span><h3>Telemetry Processing Tools in GSW<a class="headerlink" href="#telemetry-processing-tools-in-gsw-1" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="level-1-product-structures-and-contents">
+<h3>Level 1 Product Structures and Contents<a class="headerlink" href="#level-1-product-structures-and-contents" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="house-keeping-1">
+<span id="id2"></span><h4>House Keeping<a class="headerlink" href="#house-keeping-1" title="Permalink to this headline">¶</a></h4>
+<p>** Does the FSS generate housekeeping TM if not do we have any example
+TM? Do the readers /writers currently support HK tm</p>
+<div class="section" id="header">
+<h5>Header<a class="headerlink" href="#header" title="Permalink to this headline">¶</a></h5>
+<p>FILENAME = ‘solo_LL02_stix-lightcurves_0000086399.1234.fits’</p>
+<p>DATE = ‘YYYY-MM-DDThh:mm:ss.SSS’ / FITS file creation date in UTC</p>
+<p>OBT-START = 0.0</p>
+<p>OBT-END = 0.0</p>
+<p>DATE-OBS = ‘YYYY-MM-DDThh:mm:ss.SSS’ / nominal UT date when integration
+of this</p>
+<p>DATE-END = ‘YYYY-MM-DDThh:mm:ss.SSS’ / nominal UT date when integration
+of this</p>
+<p>LEVEL = ‘LL02’</p>
+<p>OBSRVTRY = ‘Solar Orbiter’</p>
+<p>TELESCOP = ‘SOLO/STIX’</p>
+<p>INSTRUME = ‘STIX’</p>
+<p>OBS_MODE = ‘NOMINAL’</p>
+<p>XPOSURE = 0</p>
+<p>COMPLETE = ‘C’</p>
+<p>Version number</p>
+<p>Packet type</p>
+<p>Data field header flag</p>
+<p>APID – PID</p>
+<p>APID – Packet Category</p>
+<p>segmentation grouping flags</p>
+<p>Source sequence count</p>
+<p>Packet data field length - 1</p>
+<p>PUS version</p>
+<p>Service Type</p>
+<p>Service Subtype</p>
+<p>destination ID</p>
+<p>SCET – coarse part</p>
+<p>SCET – fine part</p>
+</div>
+<div class="section" id="data-sid1">
+<h5>Data – SID1<a class="headerlink" href="#data-sid1" title="Permalink to this headline">¶</a></h5>
+<p>SW running</p>
+<p>Instrument number</p>
+<p>Instrument mode</p>
+<p>HK_DPU_PCB_T</p>
+<p>HK_DPU_FPGA_T</p>
+<p>HK_DPU_3V3_C</p>
+<p>HK_DPU_2V5_C</p>
+<p>HK_DPU_1V5_C</p>
+<p>HK_DPU_SPW_C</p>
+<p>HK_DPU_SPW0_V</p>
+<p>HK_DPU_SPW1_V</p>
+<p>HW/SW status 1</p>
+<p>HW/SW status 2</p>
+<p>HK_DPU_1V5_V</p>
+<p>HK_REF_2V5_V</p>
+<p>HK_DPU_2V9_V</p>
+<p>HK_PSU_TEMP_T</p>
+<p>FDIR function status^</p>
+<p>FDIR status mask of HK temperature checks***</p>
+<p>FDIR status mask of HK voltage checks***</p>
+<p>HKSelftest is execution status flag</p>
+<p>Memory services execution status flag</p>
+<p>FDIR status mask of HK current checks***</p>
+<p>Number of executed TC packets</p>
+<p>Number of sent TM packets</p>
+<p>Number of failed TM generations</p>
+</div>
+<div class="section" id="data-sid-2">
+<h5>Data SID 2<a class="headerlink" href="#data-sid-2" title="Permalink to this headline">¶</a></h5>
+<p>SW running = 0</p>
+<p>Instrument number = 1</p>
+<p>Instrument mode</p>
+<p>HK_DPU_PCB_T</p>
+<p>HK_DPU_FPGA_T</p>
+<p>HK_DPU_3V3_C</p>
+<p>HK_DPU_2V5_C</p>
+<p>HK_DPU_1V5_C</p>
+<p>HK_DPU_SPW_C***</p>
+<p>HK_DPU_SPW0_V</p>
+<p>HK_DPU_SPW1_V</p>
+<p>HK_ASP_REF_2V5A_V</p>
+<p>HK_ASP_REF_2V5B_V</p>
+<p>HK_ASP_TIM01_T</p>
+<p>HK_ASP_TIM02_T</p>
+<p>HK_ASP_TIM03_T</p>
+<p>HK_ASP_TIM04_T</p>
+<p>HK_ASP_TIM05_T</p>
+<p>HK_ASP_TIM06_T</p>
+<p>HK_ASP_TIM07_T</p>
+<p>HK_ASP_TIM08_T</p>
+<p>HK_ASP_VSENSA_V</p>
+<p>HK_ASP_VSENSB_V</p>
+<p>HK_ATT_V</p>
+<p>ATT_T</p>
+<p>HK_HV_01_16_V</p>
+<p>HK_HV_17_32_V</p>
+<p>DET_Q1_T</p>
+<p>DET_Q2_T</p>
+<p>DET_Q3_T</p>
+<p>DET_Q4_T</p>
+<p>HK_DPU_1V5_V</p>
+<p>HK_REF_2V5_V</p>
+<p>HK_DPU_2V9_V</p>
+<p>HK_PSU_TEMP_T</p>
+<p>HW/SW status 1**</p>
+<p>HW/SW status 2**</p>
+<p>HW/SW status 3**</p>
+<p>HW/SW status 4**</p>
+<p>Median value of trigger accumulators ****</p>
+<p>Maximum value of trigger accumulators</p>
+<p>HV regulators mask on/off (see Table 26)</p>
+<p>Sequence count of the last TC(20,128) ^</p>
+<p>Total number of attenuator motions over the mission</p>
+<p>HK_ASP_PHOTOA0_V</p>
+<p>HK_ASP_PHOTOA1_V</p>
+<p>HK_ASP_PHOTOB0_V</p>
+<p>HK_ASP_PHOTOB1_V</p>
+<p>Attenuator currents*</p>
+<p>HK_ATT_C</p>
+<p>HK_DET_C</p>
+<p>FDIR function status</p>
+</div>
+<div class="section" id="data-sid-4-heartbeat">
+<h5>Data SID 4 (heartbeat)<a class="headerlink" href="#data-sid-4-heartbeat" title="Permalink to this headline">¶</a></h5>
+<p>Structure ID=4</p>
+<p>Heartbeat value - OBT Coarse Time</p>
+<p>Flare Message (defined in Table 108)</p>
+<p>Z Location (**)</p>
+<p>Y Location (**)</p>
+<p>Flare Duration</p>
+<p>Attenuator motion flag</p>
+</div>
+</div>
+<div class="section" id="quick-look-1">
+<span id="id3"></span><h4>Quick Look<a class="headerlink" href="#quick-look-1" title="Permalink to this headline">¶</a></h4>
+<p>All quick look data are stored in two types of structures control and
+data. Control structures contain information necessary to extract the
+data from TM such as compression scheme parameters and information to
+interpret the data such as integration time as well as other common
+information.</p>
+<div class="section" id="header-1">
+<span id="id4"></span><h5>Header<a class="headerlink" href="#header-1" title="Permalink to this headline">¶</a></h5>
+<p>SIMPLE = T / Primary Header created by MWRFITS v1.13</p>
+<p>BITPIX = 8 /</p>
+<p>NAXIS = 0 /</p>
+<p>EXTEND = T / Extensions may be present</p>
+<p>FILENAME= ‘solo_l1_stix-background_19790101T000000_V.fits’ /FITS
+filename</p>
+<p>DATE = ‘2019-01-08T15:47:50.000’ /FITS file creation date in UTC</p>
+<p>OBT-BEG = ‘0.0000000’ /Start of acquisition time in OBT</p>
+<p>TIMESYS = ‘OBT ‘ /System used for time keywords</p>
+<p>LEVEL = ‘L1 ‘ /Processing level of the data</p>
+<p>CREATOR = ‘mwrfits ‘ /FITS creation software</p>
+<p>ORIGIN = ‘Solar Orbiter SOC, ESAC’ /Location where file has been
+generated</p>
+<p>VERS_SW = ‘2.4 ‘ /Software version</p>
+<p>VERSION = ‘201810121423’ /Version of data product</p>
+<p>OBSRVTRY= ‘Solar Orbiter’ /Satellite name</p>
+<p>TELESCOP= ‘SOLO/STIX’ /Telescope/Sensor name</p>
+<p>INSTRUME= ‘STIX ‘ /Instrument name</p>
+<p>EXPOSURE= ‘ 320’ /[s] Integration time</p>
+<p>HISTORY test</p>
+<p>DATE-OBS= ‘1979-01-01T00:00:00.000’ /Start of acquisition time in UT</p>
+<p>HISTORY test</p>
+<p>END</p>
+</div>
+<div class="section" id="common-structure-mapping-channel-to-energy">
+<h5>Common structure mapping channel to energy<a class="headerlink" href="#common-structure-mapping-channel-to-energy" title="Permalink to this headline">¶</a></h5>
+<p>{</p>
+<p>CHANNEL: 0L, ;</p>
+<p>E_MIN: 0.0, ; keV</p>
+<p>E_MAX: 0.0 ; keV</p>
+<p>}</p>
+</div>
+<div class="section" id="light-curve">
+<h5>Light Curve<a class="headerlink" href="#light-curve" title="Permalink to this headline">¶</a></h5>
+<p>Control</p>
+<p>{</p>
+<p>integration_time : 0, ; s</p>
+<p>detector_mask : bytarr(32), ;</p>
+<p>pixel_mask : bytarr(12), ;</p>
+<p>energy_bin_mask : bytarr(32), ;</p>
+<p>compression_scheme_counts : intarr(3), ; k, m ,s</p>
+<p>compression_scheme_triggers : intarr(3) ; k, m ,s</p>
+<p>}</p>
+<p>Data</p>
+<p>{</p>
+<p>COUNTS: lonarr(n_energies), ; Counts</p>
+<p>TRIGGERS: 0L, ;</p>
+<p>RATE_CONTROL_REGEIME: 0b, ;</p>
+<p>CHANNEL: lonarr(n_energies), ;</p>
+<p>TIME: 0.0d, ; s</p>
+<p>TIMEDEL: 0.0 ; s</p>
+<p>}</p>
+</div>
+<div class="section" id="background">
+<h5>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h5>
+<p>Control</p>
+<p>{</p>
+<p>integration_time : 0, ; s</p>
+<p>energy_bin_mask : bytarr(32), ;</p>
+<p>compression_schema_background : intarr(3), ; k, m, s</p>
+<p>compression_schema_trigger : intarr(3) ; k, m, s</p>
+<p>}</p>
+<p>Data</p>
+<p>{</p>
+<p>BACKGROUND: lonarr(n_energies), ; Counts</p>
+<p>TRIGGERS: 0L, ;</p>
+<p>CHANNEL: lonarr(n_energies), ;</p>
+<p>TIME: 0.0d, ;</p>
+<p>TIMEDEL: 0 ;</p>
+<p>}</p>
+</div>
+<div class="section" id="spectra">
+<h5>Spectra<a class="headerlink" href="#spectra" title="Permalink to this headline">¶</a></h5>
+<p>Control</p>
+<p>{</p>
+<p>pixel_mask : bytarr(16), ;</p>
+<p>integration_time : 0, ; s</p>
+<p>compression_scheme_spec : intarr(3), ; k, m, s</p>
+<p>compression_scheme_trigger : intarr(3) ; k, m ,s</p>
+<p>}</p>
+<p>Data</p>
+<p>{</p>
+<p>COUNTS: lonarr(n_energies, n_detectors), ; Counts</p>
+<p>TRIGGERS: 0L, ;</p>
+<p>CHANNEL: lonarr(n_energies), ;</p>
+<p>DETECTOR_MASK: bytarr(32), ;</p>
+<p>TIME: 0.0d, ; s</p>
+<p>TIMEDEL: 0.0 ; s</p>
+<p>}</p>
+</div>
+<div class="section" id="variance">
+<h5>Variance<a class="headerlink" href="#variance" title="Permalink to this headline">¶</a></h5>
+<p>Control</p>
+<p>{</p>
+<p>integration_time : 0.0, ; s</p>
+<p>detector_mask : bytarr(32), ;</p>
+<p>pixel_mask : bytarr(16), ;</p>
+<p>energy_bin_mask : bytarr(32), ;</p>
+<p>compression_scheme_variance : intarr(3), ; k, m, s</p>
+<p>samples_per_variance: 0 ;</p>
+<p>}</p>
+<p>Data</p>
+<p>{</p>
+<p>VARIANCE: 0L, ; ??</p>
+<p>CHANNEL: lonarr(n_energies), ;</p>
+<p>TIME: 0.0d, ; s</p>
+<p>TIMEDEL: 0.0 ; s</p>
+<p>}</p>
+</div>
+<div class="section" id="flare-flag-and-location">
+<h5>Flare Flag and Location<a class="headerlink" href="#flare-flag-and-location" title="Permalink to this headline">¶</a></h5>
+<p>Control</p>
+<p>{</p>
+<p>integration_time : 0 ; s</p>
+<p>n_samples : 0 ;</p>
+<p>}</p>
+<p>Data</p>
+<p>{</p>
+<p>flare_flag : 0, ; Flare status</p>
+<p>loc_z : 0, ; ?</p>
+<p>loc_y : 0 ; ?</p>
+<p>time: ; ?</p>
+<p>timedel: ; ?</p>
+<p>}</p>
+</div>
+<div class="section" id="energy-calibration">
+<h5>Energy Calibration<a class="headerlink" href="#energy-calibration" title="Permalink to this headline">¶</a></h5>
+<p>TBD</p>
+</div>
+<div class="section" id="flare-status-word">
+<h5>Flare Status Word<a class="headerlink" href="#flare-status-word" title="Permalink to this headline">¶</a></h5>
+<p>TBD</p>
+</div>
+<div class="section" id="tm-management-status-and-flare-list">
+<h5>TM Management Status and Flare list<a class="headerlink" href="#tm-management-status-and-flare-list" title="Permalink to this headline">¶</a></h5>
+<p>TBD</p>
+</div>
+</div>
+<div class="section" id="bulk-science-1">
+<span id="id5"></span><h4>Bulk Science<a class="headerlink" href="#bulk-science-1" title="Permalink to this headline">¶</a></h4>
+<p>??</p>
+</div>
+</div>
+<div class="section" id="level-0-fits-to-level-1-fits">
+<h3>Level 0 FITS to Level 1 FITS<a class="headerlink" href="#level-0-fits-to-level-1-fits" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="house-keeping-2">
+<span id="id6"></span><h4>House Keeping<a class="headerlink" href="#house-keeping-2" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="quick-look-2">
+<span id="id7"></span><h4>Quick Look<a class="headerlink" href="#quick-look-2" title="Permalink to this headline">¶</a></h4>
+<p>All quick look data are processed in a similar way the level 0 FITS
+files are read and processed for each type of quick look the control
+structures above are populated and the data structures are replicated
+the required number of times and then filled with the data from the TM.
+These two structures are then written as binary table extension to FITS
+aligned with UTC days</p>
+</div>
+<div class="section" id="bulk-science-2">
+<span id="id8"></span><h4>Bulk Science<a class="headerlink" href="#bulk-science-2" title="Permalink to this headline">¶</a></h4>
+</div>
+</div>
+<div class="section" id="operational-considerations-1">
+<span id="id9"></span><h3>Operational Considerations<a class="headerlink" href="#operational-considerations-1" title="Permalink to this headline">¶</a></h3>
+<p>Block size for observation align with mode (it is foreseen that we will
+not stay in nominal mode 24h at a time and then go back to safe). Since
+these will be more human facing might make sense to align to UTC day
+rather than space craft</p>
+</div>
+<div class="section" id="open-issues-1">
+<span id="id10"></span><h3>Open Issues<a class="headerlink" href="#open-issues-1" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>How we plan to use the generated FITS files with existing software</p></li>
+<li></li>
+</ul>
+</div>
+</div>
+<div class="section" id="stix-level-1-to-stix-level-2-products">
+<h2>STIX Level 1 to STIX Level 2 Products<a class="headerlink" href="#stix-level-1-to-stix-level-2-products" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="general-purpose-of-level-2-product">
+<h3>General Purpose of Level 2 Product<a class="headerlink" href="#general-purpose-of-level-2-product" title="Permalink to this headline">¶</a></h3>
+<p>Calibrated data ready for scientific use. In general, ‘analog’
+corrections will use fixed parameters, whose off-line calculation will
+be externally provided and will assume that all detectors are the same.
+Energy averages will use the broad QL energy bands, assuming a fixed but
+quasi-realistic spectral shape. The numerical values of these
+corrections will be documented.</p>
+<p>Since all corrections are linear and known (for a given digital state)
+they can be readily and accurately reversed to support alternate
+interpretations of the output.</p>
+</div>
+<div class="section" id="telemetry-processing-tools-in-gsw-2">
+<span id="id11"></span><h3>Telemetry Processing Tools in GSW<a class="headerlink" href="#telemetry-processing-tools-in-gsw-2" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="level-2-product-structures-and-contents">
+<h3>Level 2 Product Structures and Contents<a class="headerlink" href="#level-2-product-structures-and-contents" title="Permalink to this headline">¶</a></h3>
+<p>As in Level 1 all Level 2 quick look data are stored in two types of
+structures control and data.</p>
+<p>Again a common structure mapping channel to energy is included as the
+second extension</p>
+<p>The correction factors applied to go from Level 1 to Level 2 are
+included in the control structure.</p>
+<p>{</p>
+<p>CHANNEL: 0L, ;</p>
+<p>E_MIN: 0.0, ; keV</p>
+<p>E_MAX: 0.0 ; keV</p>
+<p>}</p>
+<p>3.1 Light curves</p>
+<p>3.1.1 Description</p>
+<p>The output will be labeled as ‘normalized counts/cm2/second’.</p>
+<p>Corrections will be made for:</p>
+<ul class="simple">
+<li><p>number of active detectors</p></li>
+<li><p>number of disabled pixels</p></li>
+<li><p>nominal, detector-averaged photopeak efficiency, averaged over each</p></li>
+</ul>
+<p>broad QL energy band.</p>
+<ul class="simple">
+<li><p>detector-averaged grid transmission, averaged over each broad QL</p></li>
+</ul>
+<p>energy band</p>
+<ul class="simple">
+<li><p>window transmission, averaged over each broad QL energy band</p></li>
+<li><p>attenuator transmission, averaged over each broad QL energy band</p></li>
+<li><p>detector-averaged live time.</p></li>
+</ul>
+<p>No correction will be made for:</p>
+<ul class="simple">
+<li><p>off-diagonal energy response.</p></li>
+<li><p>background.</p></li>
+</ul>
+<p>LC values in each energy band are roughly equivalent to photons/cm/s
+when flux dominates background.</p>
+<p>3.1.2 Structure</p>
+<p>Control</p>
+<p>{</p>
+<p>integration_time : 0, ; s</p>
+<p>detector_mask : bytarr(32), ;</p>
+<p>pixel_mask : bytarr(12), ;</p>
+<p>energy_bin_mask : bytarr(32), ;</p>
+<p>correction_factor_active_detectors: 0, ;</p>
+<p>correction_factor_disabled_pixels: 0,</p>
+<p>detector_efficiency : fltarr(n_energies), ;</p>
+<p>grid_transmission: fltarr(n_energies) , ;</p>
+<p>window_transmission: fltarr(n_energies) , ;</p>
+<p>attenuator_transmission: fltarr(n_energies) , ;</p>
+<p>detector_averaged_livetime: 0 ;</p>
+<p>}</p>
+<p>Data</p>
+<p>{</p>
+<p>COUNTS: lonarr(n_energies), ; ‘normalized counts/cm2/second’</p>
+<p>TRIGGERS: 0L, ;</p>
+<p>RATE_CONTROL_REGEIME: 0b, ;</p>
+<p>CHANNEL: lonarr(n_energies), ;</p>
+<p>TIME: 0.0d, ; s</p>
+<p>TIMEDEL: 0.0 ; s</p>
+<p>}</p>
+<p>3.2 Background Monitor</p>
+<p>3.2.1 Description</p>
+<p>There are two interpretations of the pixel-summed output of the
+background detector: one is that for low or zero solar flux, it
+represents background in 0.81 cm<sup>2</sup> of detector; alternatively,
+for high flux data (even with attenuator IN) it represents the
+unattenuated flux as seen with a detector of area 0.022 cm2
+(corresponding to the apertures in the rear BKGD grid). Output will be
+provided to support both interpretations. The user will choose which, if
+either, limiting case applies for a given time/energy.</p>
+<p>(Analysis of the bulk science data will enable both to be correctly
+determined simultaneously.)</p>
+<p>Background data will be normalized so that in the absence of solar flux
+it should numerically match the light curve output. It can be labeled as
+‘Low flux-equivalent background [photons/cm2/second]’.</p>
+<p>Similarly the flux interpretation output can be labeled as ‘High flux
+estimated photons/cm2/second’.</p>
+<p>For the background interpretation, corrections will be made for:</p>
+<p>Corrections will be made for:</p>
+<p>* number of disabled pixels in BKGD detector. (If none are disabled,
+default area is 0.81 cm2)</p>
+<p>* nominal, photopeak efficiency, averaged over the broad QL energy
+bands.</p>
+<p>* Background detector live time.</p>
+<p>No correction will be made for:</p>
+<p>* off-diagonal energy response.</p>
+<p>For the unattenuated flux interpretation:</p>
+<p>Corrections will be made for:</p>
+<p>* specific disabled pixels</p>
+<p>* nominal photopeak efficiency, averaged over the broad QL energy
+bands.</p>
+<p>* window transmission, averaged over the broad QL energy bands</p>
+<p>* rear BKGD grid transmission, averaged over the QL energy bands</p>
+<p>* detector-averaged live time.</p>
+<p>No correction will be made for:</p>
+<p>* off-diagonal energy response.</p>
+<p>* background.</p>
+<p>High flux Background</p>
+<p>Control</p>
+<p>{</p>
+<p>integration_time : 0, ; s</p>
+<p>energy_bin_mask : bytarr(32), ;</p>
+<p>nbkg_disabled_pixels : 0, ;</p>
+<p>detector_efficiency: fltarr(n_energies), ;</p>
+<p>bkg_livetime: 0</p>
+<p>}</p>
+<p>Data</p>
+<p>{</p>
+<p>BACKGROUND: lonarr(n_energies), ; ‘Low flux-equivalent background
+[photons/cm2/second]</p>
+<p>TRIGGERS: 0L, ;</p>
+<p>CHANNEL: lonarr(n_energies), ;</p>
+<p>TIME: 0.0d, ;</p>
+<p>TIMEDEL: 0 ;</p>
+<p>}</p>
+<p>High flux Background</p>
+<p>Control</p>
+<p>{</p>
+<p>integration_time : 0, ; s</p>
+<p>energy_bin_mask : bytarr(32), ;</p>
+<p>bkg_disabled_pixels: 0 ;</p>
+<p>detector_efficiency: fltarr(n_energies), ;</p>
+<p>bkg_livetime: 0, ;</p>
+<p>bkg_grid_transmission: fltarr(n_energies), ;</p>
+<p>window_transmission: fltarr(n_energies) ;</p>
+<p>}</p>
+<p>Data</p>
+<p>{</p>
+<p>BACKGROUND: lonarr(n_energies), ; ‘High flux estimated
+photons/cm2/second’</p>
+<p>TRIGGERS: 0L, ;</p>
+<p>CHANNEL: lonarr(n_energies), ;</p>
+<p>TIME: 0.0d, ;</p>
+<p>TIMEDEL: 0 ;</p>
+<p>}</p>
+<p>Detector-specific spectra</p>
+<p>Description</p>
+<p>Corrections will be made for:</p>
+<p>* Detector-specific live time</p>
+<p>No corrections will be made for:</p>
+<p>* Grid transmission</p>
+<p>* Energy response</p>
+<p>* Window or attenuator transmission</p>
+<p>Output can be labeled as ‘counts/second’</p>
+<p>Control</p>
+<p>{</p>
+<p>pixel_mask : bytarr(16), ;</p>
+<p>integration_time : 0, ; s</p>
+<p>detector_livetime: 0 ;</p>
+<p>}</p>
+<p>Data</p>
+<p>{</p>
+<p>COUNTS: lonarr(n_energies, n_detectors), ; Counts/s</p>
+<p>TRIGGERS: 0L, ;</p>
+<p>CHANNEL: lonarr(n_energies), ;</p>
+<p>DETECTOR_MASK: bytarr(32), ;</p>
+<p>TIME: 0.0d, ; s</p>
+<p>TIMEDEL: 0.0 ; s</p>
+<p>}</p>
+</div>
+<div class="section" id="level-1-fits-to-level-2-fits">
+<h3>Level 1 FITS to Level 2 FITS<a class="headerlink" href="#level-1-fits-to-level-2-fits" title="Permalink to this headline">¶</a></h3>
+<p>Level 1 fits files are read, and the corrections for live time and
+analog correction factors are applied.</p>
+<p>In order to be in agreement with the HEASARC recommendation, the primary
+data array is left empty. The first extension header contains the
+lightcurve structure definition and the first extension data array the
+lightcurve data. The second extension header contains the energy axis
+structure definition and the second extension data array the actual
+energy axis data. The third contains the control structure.</p>
+<p>FILENAME = ‘solo_LL02_stix-lightcurves_0000086399.1234.fits’</p>
+<p>DATE = ‘YYYY-MM-DDThh:mm:ss.SSS’ / FITS file creation date in UTC</p>
+<p>OBT-START = 0.0</p>
+<p>OBT-END = 0.0</p>
+<p>DATE-OBS = ‘YYYY-MM-DDThh:mm:ss.SSS’ / nominal UT date when integration
+of this</p>
+<p>DATE-END = ‘YYYY-MM-DDThh:mm:ss.SSS’ / nominal UT date when integration
+of this</p>
+<p>LEVEL = ‘LL02’</p>
+<p>OBSRVTRY = ‘Solar Orbiter’</p>
+<p>TELESCOP = ‘SOLO/STIX’</p>
+<p>INSTRUME = ‘STIX’</p>
+<p>OBS_MODE = ‘NOMINAL’</p>
+<p>XPOSURE = 0</p>
+<p>COMPLETE = ‘C’</p>
+<p><strong>Primary Data array</strong></p>
+<p>No primary array</p>
+<p>Lightcurve Extension 1, Header</p>
+<p>XTENSION= ‘BINTABLE’</p>
+<p>BITPIX = 8</p>
+<p>NAXIS = 2</p>
+<p>NAXIS1 = 5</p>
+<p>NAXIS2 = N_DATA_POINTS</p>
+<p>TFIELDS = 3</p>
+<p>TUNIT1 = ‘normalized counts/cm2/second’</p>
+<p>TUNIT2 = ‘’</p>
+<p>TUNIT3 = ‘s</p>
+<p>TTYPE1 = ‘COUNTS’</p>
+<p>TTYPE2 = ‘CHANNEL’</p>
+<p>TTYPE3 = ‘RELATIVE_TIME’</p>
+<p>Background Extension 1, Header</p>
+<p>XTENSION= ‘BINTABLE’</p>
+<p>BITPIX = 8</p>
+<p>NAXIS = 2</p>
+<p>NAXIS1 = 5</p>
+<p>NAXIS2 = N_DATA_POINTS</p>
+<p>TFIELDS = 3</p>
+<p>TUNIT1 = ‘Low flux-equivalent background [photons/cm2/second’</p>
+<p>TUNIT2 = ‘’</p>
+<p>TUNIT3 = ‘s</p>
+<p>TTYPE1 = ‘COUNTS’</p>
+<p>TTYPE2 = ‘CHANNEL’</p>
+<p>TTYPE3 = ‘RELATIVE_TIME’</p>
+<p>Background Extension 1, Header</p>
+<p>XTENSION= ‘BINTABLE’</p>
+<p>BITPIX = 8</p>
+<p>NAXIS = 2</p>
+<p>NAXIS1 = 5</p>
+<p>NAXIS2 = N_DATA_POINTS</p>
+<p>TFIELDS = 3</p>
+<p>TUNIT1 = High flux-equivalent background [photons/cm2/second’</p>
+<p>TUNIT2 = ‘’</p>
+<p>TUNIT3 = ‘s</p>
+<p>TTYPE1 = ‘COUNTS’</p>
+<p>TTYPE2 = ‘CHANNEL’</p>
+<p>TTYPE3 = ‘RELATIVE_TIME’</p>
+<p>Background Extension 4, Header</p>
+<p>XTENSION= ‘BINTABLE’</p>
+<p>BITPIX = 8</p>
+<p>NAXIS = 2</p>
+<p>NAXIS1 = 30</p>
+<p>NAXIS2 = N_DATA_POINTS</p>
+<p>TFIELDS = 3</p>
+<p>TUNIT1 = ‘counts/s’</p>
+<p>TUNIT2 = ‘’</p>
+<p>TUNIT3 = ‘s</p>
+<p>TTYPE1 = ‘COUNTS’</p>
+<p>TTYPE2 = ‘CHANNEL’</p>
+<p>TTYPE3 = ‘RELATIVE_TIME’</p>
+<p>Extension 2, Header</p>
+<p>XTENSION= ‘BINTABLE’</p>
+<p>BITPIX = 8</p>
+<p>NAXIS = 2</p>
+<p>NAXIS1 = 10</p>
+<p>NAXIS2 = 5</p>
+<p>TFIELDS = 3</p>
+<p>EXTNAME = ‘ENEBAND’</p>
+<p>TUNIT1 = ‘’</p>
+<p>TUNIT2 = ‘keV’</p>
+<p>TUNIT3 = ‘keV’</p>
+<p>TTYPE1 = ‘CHANNEL’</p>
+<p>TTYPE2 = ‘E_MIN’</p>
+<p>TTYPE3 = ‘E_MAX’</p>
+</div>
+<div class="section" id="operational-considerations-2">
+<span id="id12"></span><h3>Operational Considerations<a class="headerlink" href="#operational-considerations-2" title="Permalink to this headline">¶</a></h3>
+<p>Block size for observation align with mode (it is foreseen that we will
+not stay in nominal mode 24h at a time and then go back to safe).</p>
+</div>
+<div class="section" id="correction-factors">
+<h3>Correction Factors<a class="headerlink" href="#correction-factors" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="number-of-active-detectors">
+<h4>Number of active detectors<a class="headerlink" href="#number-of-active-detectors" title="Permalink to this headline">¶</a></h4>
+<div class="math notranslate nohighlight">
+\[C\  = \frac{N_{\text{ActiveDetectors}}}{32}\]</div>
+</div>
+<div class="section" id="number-of-disabled-pixels">
+<h4>Number of disabled pixels<a class="headerlink" href="#number-of-disabled-pixels" title="Permalink to this headline">¶</a></h4>
+<div class="math notranslate nohighlight">
+\[\mathbf{C\  =}\frac{\mathbf{N}_{\mathbf{\text{LP\ }}}\mathbf{A}_{\mathbf{\text{LP}}}\mathbf{+}\mathbf{N}_{\mathbf{\text{SP\ }}}\mathbf{A}_{\mathbf{\text{SP}}}}{\mathbf{A}_{\mathbf{D}}}\]</div>
+<p>Where N<sub>LP</sub> and N<sub>SP</sub> are the numbers of enabled large and
+small pixels respectively, A<sub>LP</sub> and A<sub>SP</sub> are the areas
+of large and small pixels and A<sub>D</sub></p>
+</div>
+<div class="section" id="photopeak-efficiency">
+<h4>Photopeak efficiency<a class="headerlink" href="#photopeak-efficiency" title="Permalink to this headline">¶</a></h4>
+<p>The detector efficiency is estimated using the IDL procedure
+stx_build_drm.</p>
+<p>efficiency factor :</p>
+<p>[9.21, 1.97, 1.30, 1.31, 1.24]</p>
+</div>
+<div class="section" id="grid-transmission">
+<h4>Grid transmission<a class="headerlink" href="#grid-transmission" title="Permalink to this headline">¶</a></h4>
+<p>Grid transmission is estimated assuming a slit faction of 25% and 0.04
+cm of tungsten</p>
+<p>grid factor:</p>
+<p>[4.00, 4.00, 4.00, 4.00, 3.73]</p>
+</div>
+<div class="section" id="background-grid-transmission">
+<h4>Background grid transmission<a class="headerlink" href="#background-grid-transmission" title="Permalink to this headline">¶</a></h4>
+<p>Background grid transmission is estimated assuming an aperture of 0.022
+cm<sup>2</sup> and 0.04 cm of tungsten.</p>
+<p>background grid factor:</p>
+<p>[36.82, 36.82, 36.82, 36.82, 19.85]</p>
+</div>
+<div class="section" id="window-transmission">
+<h4>Window transmission<a class="headerlink" href="#window-transmission" title="Permalink to this headline">¶</a></h4>
+<p>Window transmission is estimated assuming and 0.35 cm of beryllium</p>
+<p>window factor:</p>
+<p>[12.80, 2.06, 1.29, 1.15, 1.10]</p>
+</div>
+<div class="section" id="attenuator-transmission">
+<h4>Attenuator transmission<a class="headerlink" href="#attenuator-transmission" title="Permalink to this headline">¶</a></h4>
+<p>Attenuator transmission is estimated assuming and 0.06 cm of aluminum</p>
+<p>attenuator factor:</p>
+<p>[1.72e+07, 7.39e+02, 9.07e+00, 1.70e+00, 1.06e+00]</p>
+</div>
+<div class="section" id="detector-averaged-live-time">
+<h4>Detector-averaged live time<a class="headerlink" href="#detector-averaged-live-time" title="Permalink to this headline">¶</a></h4>
+<div class="math notranslate nohighlight">
+\[N_{\text{in}} = \frac{N_{\text{average\ triggers}}}{\ \left( 1 - \ N_{\text{average\ triggers}}\tau \right)}\]</div>
+<div class="math notranslate nohighlight">
+\[Lt = \ \frac{exp( - \ \eta\text{\ N}_{\text{in}})}{\ \left( 1 - \ \text{\ N}_{\text{in}}\tau \right)}\]</div>
+</div>
+<div class="section" id="detector-specific-live-time">
+<h4>Detector-specific live time<a class="headerlink" href="#detector-specific-live-time" title="Permalink to this headline">¶</a></h4>
+<div class="math notranslate nohighlight">
+\[N_{\text{in}} = \frac{N_{\text{detector\ triggers}}}{\ \left( 1 - \ N_{\text{detector\ triggers}}\tau \right)}\]</div>
+<div class="math notranslate nohighlight">
+\[Lt = \ \frac{exp( - \ \eta\text{\ N}_{\text{in}})}{\ \left( 1 - \ \text{\ N}_{\text{in}}\tau \right)}\]</div>
+</div>
+</div>
+<div class="section" id="open-issues-2">
+<span id="id13"></span><h3>Open Issues<a class="headerlink" href="#open-issues-2" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Do all (HK, QL, bulk science) have a level 2?</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">STIX-ASW</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Creation and Format of Level 0-1-2 Database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#levels-levels-levels">Levels, Levels, Levels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#telemetry-acquisition-process">Telemetry Acquisition Process</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#raw-header">Raw Header</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ancillary-data-from-solo">Ancillary Data from SolO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#telemetry-from-soc-to-stix-level-0-products">Telemetry from SOC to STIX Level 0 Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stix-level-0-to-stix-level-1-products">STIX Level 0 to STIX Level 1 Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stix-level-1-to-stix-level-2-products">STIX Level 1 to STIX Level 2 Products</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="introduction.html" title="previous chapter">Introduction</a></li>
+      <li>Next: <a href="glossary.html" title="next chapter">Glossary</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, STIX Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/data.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
